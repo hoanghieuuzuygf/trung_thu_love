@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trung Thu Love</title>
+  <title>Trung Thu của Anh và Vợ 💛</title>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -63,7 +63,7 @@
       left:5%;
       text-align:center;
       color:transparent;
-      font-size:clamp(1.4rem,5vw,2.3rem);
+      font-size:clamp(1.3rem,5vw,2.2rem);
       line-height:1.6;
       z-index:8;
       transition:opacity 1s ease, color 1s ease, text-shadow 1s ease;
@@ -98,10 +98,12 @@
   <audio id="bgMusic" src="tik.mp3" preload="auto"></audio>
   <div class="stars" id="stars"></div>
 
-  <div class="message-line" id="line1" style="top:30%;">Trung Thu này mình cùng nhau thắp đèn nhé 💫</div>
-  <div class="message-line" id="line2" style="top:40%;">Dù xa hay gần, lòng vẫn ấm áp như trăng rằm 🌕</div>
-  <div class="message-line" id="line3" style="top:50%;">Chúc em luôn vui vẻ, bình an và được yêu thương 💛</div>
-  <div class="message-line" id="line4" style="top:60%;">Trung Thu hạnh phúc nha, tình yêu của anh 🎐</div>
+  <div class="message-line" id="line1" style="top:25%;">Tết Trung Thu năm nay anh với vợ phải tạm thời xa nhau rồi 🌕</div>
+  <div class="message-line" id="line2" style="top:35%;">Vợ có nhớ anh không, có còn yêu anh không ạ 💛</div>
+  <div class="message-line" id="line3" style="top:45%;">Vợ là chấp niệm lớn nhất của cả cuộc đời anh rồi 💫</div>
+  <div class="message-line" id="line4" style="top:55%;">Rồi anh với vợ sẽ sớm ở bên nhau thôi 💞</div>
+  <div class="message-line" id="line5" style="top:65%;">Anh với vợ cùng một phường mà, anh không để vợ trốn khỏi đời anh đâu 💛</div>
+  <div class="message-line" id="line6" style="top:75%;">Cho dù vợ không về, anh cũng phải qua đó tìm vợ. Yêu vợ Hoàng Nhật của anh 💖</div>
 
   <button class="music-control" id="musicBtn">Tắt nhạc</button>
 
@@ -111,7 +113,7 @@
     const musicBtn = document.getElementById('musicBtn');
     const stars = document.getElementById('stars');
 
-    // 1️⃣ Hiệu ứng sao
+    // sao
     for(let i=0;i<120;i++){
       const s=document.createElement('div');
       s.className='star';
@@ -123,19 +125,19 @@
       stars.appendChild(s);
     }
 
-    // 2️⃣ Hiệu ứng đèn lồng
+    // đèn lồng
     function createLantern(){
       const l=document.createElement('div');
       l.className='lantern';
       l.style.left=Math.random()*100+'vw';
-      l.style.animation=`lanternFloat ${8+Math.random()*8}s linear infinite`;
+      l.style.animation=`lanternFloat ${10+Math.random()*8}s linear infinite`;
       l.style.animationDelay=Math.random()*5+'s';
       document.body.appendChild(l);
       setTimeout(()=>l.remove(),16000);
     }
-    setInterval(createLantern,1200);
+    setInterval(createLantern,1300);
 
-    // 3️⃣ Hiệu ứng đom đóm
+    // đom đóm
     function createFirefly(){
       const f=document.createElement('div');
       f.className='firefly';
@@ -146,24 +148,24 @@
     }
     setInterval(createFirefly,700);
 
-    // 4️⃣ Bắt đầu sau khi bấm
+    // bắt đầu
     startScreen.addEventListener('click',()=>{
       startScreen.classList.add('hidden');
       music.play().catch(()=>{});
       showMessages();
     });
 
-    // 5️⃣ Nút điều khiển nhạc
+    // điều khiển nhạc
     musicBtn.addEventListener('click',()=>{
       if(music.paused){music.play();musicBtn.textContent='Tắt nhạc'}
       else{music.pause();musicBtn.textContent='Phát nhạc'}
     });
 
-    // 6️⃣ Lần lượt hiện dòng chữ
+    // hiện từng dòng
     function showMessages(){
-      const lines=['line1','line2','line3','line4'];
+      const lines=['line1','line2','line3','line4','line5','line6'];
       lines.forEach((id,i)=>{
-        setTimeout(()=>document.getElementById(id).classList.add('revealed'),i*4000);
+        setTimeout(()=>document.getElementById(id).classList.add('revealed'),i*4500);
       });
     }
   </script>
