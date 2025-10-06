@@ -1,195 +1,280 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Trung Thu Gửi Em</title>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
   <style>
-    * {margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-    body {
-      font-family: 'Ma Shan Zheng', cursive;
-      background: linear-gradient(to bottom, #000000, #0a0a2a, #000000);
-      color: #fff;
-      overflow: hidden;
-      height: 100vh;
-      width: 100vw;
-      position: fixed;
-      touch-action: manipulation;
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      font-family:'Ma Shan Zheng',cursive;
+      background:linear-gradient(to bottom,#000000,#0a0a2a,#000000);
+      color:#fff;
+      overflow:hidden;
+      touch-action:manipulation;
+      -webkit-user-select:none;
+      user-select:none;
+      position:relative;
     }
-    .hidden {display:none;}
-    .firefly {
-      position: absolute;
-      width: 3px;
-      height: 3px;
-      background: #e6ff00;
-      border-radius: 50%;
-      filter: blur(1px);
-      box-shadow: 0 0 8px #e6ff00, 0 0 15px #e6ff00;
-      z-index: 2;
+
+    /* Start overlay */
+    .start-screen{
+      position:fixed;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      z-index:1000;background:#000;
+      text-align:center;padding:20px;
     }
-    .lantern {
-      position: absolute;
-      width: 25px;
-      height: 35px;
-      background: radial-gradient(ellipse at center, #ff6600 0%, #cc3300 70%);
-      border-radius: 50% 50% 40% 40%;
-      animation: float 8s linear infinite;
-      opacity: 0.8;
-      z-index: 1;
+    .start-text{
+      color:#ffd700;font-size:clamp(1.2rem,4vw,1.8rem);
+      padding:18px 28px;border-radius:30px;
+      background:linear-gradient(45deg,rgba(255,215,0,0.06),rgba(255,215,0,0.02));
+      box-shadow:0 0 18px rgba(255,215,0,0.12);
+      animation:pulse 2s infinite;
     }
-    @keyframes float {
-      0% {transform: translateY(100vh) scale(1);}
-      100% {transform: translateY(-20vh) scale(1.1);}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:0.85}50%{transform:scale(1.04);opacity:1}}
+
+    .hidden{display:none !important}
+
+    /* Stars & fireflies */
+    .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .star{position:absolute;border-radius:50%;background:#fff;opacity:0.9;animation:twinkle 8s infinite}
+    @keyframes twinkle{0%,100%{opacity:0.12}50%{opacity:0.85}}
+
+    .firefly{
+      position:fixed;width:3px;height:3px;border-radius:50%;
+      background:#e6ff00;filter:blur(1px);box-shadow:0 0 8px #e6ff00,0 0 15px #e6ff00;
+      z-index:6;pointer-events:none;opacity:0.95;
     }
-    .message-line {
-      position: absolute;
-      font-size: clamp(1rem,4vw,1.8rem);
-      color: transparent;
-      text-align: center;
-      width: 90%;
-      left: 5%;
-      z-index: 3;
-      text-shadow: none;
-      transition: all 2s ease-in-out;
-      opacity: 0;
-      line-height: 1.4;
+
+    /* Lantern */
+    .lantern{
+      position:fixed;width:28px;height:40px;border-radius:40% 40% 35% 35%;
+      background:linear-gradient(45deg,#ff8a00,#ff3b3b);
+      box-shadow:0 0 12px rgba(255,120,0,0.6), inset 0 0 8px rgba(255,220,100,0.25);
+      z-index:5;pointer-events:none;opacity:0.95;
+      transform-origin:center;
     }
-    .message-line.revealed {
-      color: #ffd700;
-      text-shadow: 0 0 8px rgba(255,215,0,0.8), 0 0 15px rgba(255,100,100,0.6);
-      opacity: 1;
+    @keyframes lanternFloat{0%{transform:translateY(100vh) rotate(0deg)}100%{transform:translateY(-20vh) rotate(15deg)}}
+
+    /* Messages */
+    .message-line{
+      position:fixed;width:90%;left:5%;text-align:center;color:transparent;
+      font-size:clamp(1rem,4vw,1.5rem);line-height:1.4;z-index:8;
+      transition:opacity .9s ease, color .9s ease;
+      opacity:0;
     }
-    .music-control {
-      position: fixed;
-      bottom: 15px;
-      right: 15px;
-      background: rgba(255,215,0,0.3);
-      color: #ffd700;
-      border: 2px solid rgba(255,215,0,0.6);
-      padding: 10px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      z-index: 100;
-      font-family: 'Ma Shan Zheng', cursive;
-      font-size: 0.9rem;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
+    .message-line.revealed{color:#ffd700;text-shadow:0 0 8px rgba(255,215,0,0.8);opacity:1}
+
+    /* Music control */
+    .music-control{
+      position:fixed;right:14px;bottom:12px;z-index:120;
+      background:rgba(255,215,0,0.22);color:#ffd700;border:2px solid rgba(255,215,0,0.45);
+      padding:8px 12px;border-radius:20px;font-family:'Ma Shan Zheng';cursor:pointer;
+      -webkit-user-select:none;user-select:none;backdrop-filter:blur(6px);
+    }
+
+    /* small hint when music blocked */
+    .hint{
+      position:fixed;left:50%;bottom:75px;transform:translateX(-50%);z-index:121;
+      background:rgba(0,0,0,0.6);color:#ffd700;padding:8px 12px;border-radius:12px;font-size:0.9rem;
       display:none;
-    }
-    .music-control:hover {background: rgba(255,215,0,0.4);}
-    .start-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 300;
-      flex-direction: column;
-      text-align: center;
-    }
-    .start-text {
-      color: #ffd700;
-      font-size: 1.6rem;
-      animation: pulse 2s infinite;
-      padding: 0 15px;
-    }
-    @keyframes pulse {
-      0%,100%{opacity:0.7;transform:scale(1);}
-      50%{opacity:1;transform:scale(1.05);}
     }
   </style>
 </head>
 <body>
-  <!-- Màn hình chờ -->
-  <div class="start-screen" id="startScreen">
+  <!-- Start overlay -->
+  <div id="startScreen" class="start-screen">
     <div class="start-text">💛 Bấm để phát nhạc và bắt đầu 💛</div>
   </div>
 
-  <div class="message-line" id="line1" style="top: 10%;">Tết Trung Thu năm nay anh với vợ phải tạm xa nhau một chút...</div>
-  <div class="message-line" id="line2" style="top: 22%;">Nhưng lòng anh thì vẫn hướng về vợ từng phút giây.</div>
-  <div class="message-line" id="line3" style="top: 34%;">Vợ có nhớ anh không? Có còn yêu anh nhiều như trước?</div>
-  <div class="message-line" id="line4" style="top: 46%;">Anh nhớ nụ cười, ánh mắt, và tất cả của vợ...</div>
-  <div class="message-line" id="line5" style="top: 58%;">Rồi mình sẽ sớm ở bên nhau thôi, yêu vợ nhiều lắm 💛</div>
-  <div class="message-line" id="line6" style="top: 70%;">Chúc vợ Trung Thu thật vui và luôn nhớ anh nha 🌙</div>
-  <div class="message-line" id="line7" style="top: 82%;">Yêu em nhất trên đời này 💖</div>
+  <!-- Stars container -->
+  <div id="stars" class="stars"></div>
 
-  <button class="music-control" id="musicControl"><span>🎵</span> Tắt nhạc</button>
+  <!-- Message lines -->
+  <div id="line1" class="message-line" style="top:12%;">Tết Trung Thu năm nay anh với vợ phải tạm xa nhau một chút...</div>
+  <div id="line2" class="message-line" style="top:26%;">Nhưng lòng anh thì vẫn hướng về vợ từng phút giây.</div>
+  <div id="line3" class="message-line" style="top:40%;">Vợ có nhớ anh không? Có còn yêu anh nhiều như trước?</div>
+  <div id="line4" class="message-line" style="top:54%;">Anh nhớ nụ cười, ánh mắt, và tất cả của vợ...</div>
+  <div id="line5" class="message-line" style="top:68%;">Rồi mình sẽ sớm ở bên nhau thôi, yêu vợ nhiều lắm 💛</div>
+  <div id="line6" class="message-line" style="top:82%;">Chúc vợ Trung Thu thật vui và luôn nhớ anh nha 🌙</div>
+
+  <button id="musicControl" class="music-control" style="display:none;">🔇 Bật nhạc</button>
+  <div id="hint" class="hint">⚠️ Trình duyệt chặn âm thanh — bấm nút "Bật nhạc" để khởi động</div>
 
   <audio id="bgMusic" preload="auto" loop>
     <source src="tik.mp3" type="audio/mpeg">
   </audio>
 
   <script>
-    const lines = ['line1','line2','line3','line4','line5','line6','line7'];
-    const startScreen=document.getElementById('startScreen');
-    const bgMusic=document.getElementById('bgMusic');
-    const musicControl=document.getElementById('musicControl');
-    let musicPlaying=false;
+    // elements
+    const startScreen = document.getElementById('startScreen');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicControl = document.getElementById('musicControl');
+    const hint = document.getElementById('hint');
+    const lines = ['line1','line2','line3','line4','line5','line6'];
 
-    // Tạo đom đóm
+    let musicPlaying = false;
+    let lanternCount = (window.innerWidth < 768) ? 8 : 14;
+    let fireflyCount = (window.innerWidth < 768) ? 20 : 40;
+    let starCount = (window.innerWidth < 768) ? 60 : 110;
+
+    // Create stars
+    function createStars(){
+      const container = document.getElementById('stars');
+      // prevent duplicate
+      if (container.dataset.ready) return;
+      for (let i=0;i<starCount;i++){
+        const s = document.createElement('div');
+        s.className='star';
+        const size = Math.random()*1.4 + 0.3;
+        s.style.width = s.style.height = size + 'px';
+        s.style.left = Math.random()*100 + '%';
+        s.style.top = Math.random()*100 + '%';
+        s.style.animationDelay = (Math.random()*8)+'s';
+        container.appendChild(s);
+      }
+      container.dataset.ready = '1';
+    }
+
+    // Create fireflies
     function createFireflies(){
-      const n=window.innerWidth<768?25:40;
-      for(let i=0;i<n;i++){
-        const f=document.createElement('div');
-        f.className='firefly';
-        f.style.left=`${Math.random()*100}%`;
-        f.style.top=`${Math.random()*100}%`;
+      // avoid duplicate
+      if (document.querySelectorAll('.firefly').length) return;
+      for (let i=0;i<fireflyCount;i++){
+        const f = document.createElement('div');
+        f.className = 'firefly';
+        f.style.left = (Math.random()*100) + '%';
+        f.style.top = (Math.random()*100) + '%';
+        // gentle movement
+        const dur = 6000 + Math.random()*9000;
+        const dx = Math.random()*120 - 60;
+        const dy = Math.random()*120 - 60;
+        f.animate([
+          { transform: 'translate(0,0)' },
+          { transform: `translate(${dx}px, ${dy}px)` },
+          { transform: 'translate(0,0)' }
+        ], { duration: dur, iterations: Infinity, easing: 'ease-in-out' });
         document.body.appendChild(f);
       }
     }
 
-    // Tạo đèn lồng
+    // Create lanterns (floating)
     function createLanterns(){
-      const n=window.innerWidth<768?8:15;
-      for(let i=0;i<n;i++){
-        const l=document.createElement('div');
-        l.className='lantern';
-        l.style.left=`${Math.random()*100}%`;
-        l.style.animationDelay=`${Math.random()*8}s`;
-        l.style.animationDuration=`${6+Math.random()*6}s`;
+      if (document.querySelectorAll('.lantern').length) return;
+      for (let i=0;i<lanternCount;i++){
+        const l = document.createElement('div');
+        l.className = 'lantern';
+        const left = Math.random()*90 + 5;
+        const size = (window.innerWidth < 768) ? (18 + Math.random()*18) : (22 + Math.random()*28);
+        l.style.left = left+'%';
+        l.style.width = size+'px';
+        l.style.height = (size*1.3)+'px';
+        const delay = Math.random()*6;
+        const duration = 8 + Math.random()*8;
+        l.style.animation = `lanternFloat ${duration}s linear ${delay}s infinite`;
+        // add slight rotation animation
+        l.animate([
+          { transform: 'translateY(0) rotate(0deg)' },
+          { transform: 'translateY(-10px) rotate(6deg)' },
+          { transform: 'translateY(0) rotate(0deg)' }
+        ], { duration: 2000 + Math.random()*2000, iterations: Infinity, easing: 'ease-in-out' });
         document.body.appendChild(l);
       }
     }
 
-    // Hiện dòng chữ dần dần
+    // Show messages sequentially
     function showMessages(){
-      lines.forEach((id,i)=>{
+      lines.forEach((id, idx)=>{
         setTimeout(()=>{
-          document.getElementById(id).classList.add('revealed');
-        }, i*3000);
+          const el = document.getElementById(id);
+          if (el) el.classList.add('revealed');
+        }, idx * 2400); // 2.4s gap for snappier feel
       });
     }
 
-    // Khi bấm bắt đầu
-    startScreen.addEventListener('click',()=>{
-      bgMusic.volume=0.7;
+    // Start the show (hide overlay + show effects)
+    function startShowFlow(){
+      // hide start overlay immediately
+      startScreen.classList.add('hidden');
+
+      // show UI / effects immediately
+      createStars();
+      createFireflies();
+      createLanterns();
+      showMessages();
+      musicControl.style.display = 'block';
+    }
+
+    // update music button label
+    function updateMusicControl(){
+      if (musicPlaying){
+        musicControl.textContent = '🎵 Tắt nhạc';
+      } else {
+        musicControl.textContent = '🔇 Bật nhạc';
+      }
+    }
+
+    // Try to play music — but do not block showing effects
+    function tryPlayMusic(){
+      bgMusic.volume = 0.7;
       bgMusic.play().then(()=>{
-        startScreen.classList.add('hidden'); // Ẩn dòng "Bấm để phát nhạc"
-        createFireflies();
-        createLanterns();
-        showMessages();
-        musicControl.style.display='block';
-        musicPlaying=true;
-      }).catch(err=>{
-        alert("⚠️ Trình duyệt chặn phát nhạc, hãy bấm lại để bắt đầu nhé!");
+        musicPlaying = true;
+        updateMusicControl();
+        hint.style.display = 'none';
+      }).catch((err)=>{
+        // blocked by browser — show hint and offer manual button
+        musicPlaying = false;
+        updateMusicControl();
+        hint.style.display = 'block';
       });
+    }
+
+    // Start screen click handler
+    startScreen.addEventListener('click', function onStart(){
+      // 1) Hide and show visuals immediately
+      startShowFlow();
+
+      // 2) Try start music (non-blocking)
+      tryPlayMusic();
+
+      // Remove event so no duplicate
+      startScreen.removeEventListener('click', onStart);
     });
 
-    // Nút bật/tắt nhạc
-    musicControl.addEventListener('click',()=>{
-      if(musicPlaying){
+    // music control button toggles playback
+    musicControl.addEventListener('click', ()=>{
+      if (musicPlaying){
         bgMusic.pause();
-        musicControl.innerHTML='<span>🔇</span> Bật nhạc';
+        musicPlaying = false;
+        updateMusicControl();
       } else {
-        bgMusic.play();
-        musicControl.innerHTML='<span>🎵</span> Tắt nhạc';
+        bgMusic.play().then(()=>{
+          musicPlaying = true;
+          updateMusicControl();
+          hint.style.display = 'none';
+        }).catch(()=>{
+          hint.style.display = 'block';
+        });
       }
-      musicPlaying=!musicPlaying;
+    });
+
+    // allow keyboard Enter/Space to start for desktop
+    document.addEventListener('keydown', (e)=>{
+      if (!startScreen.classList.contains('hidden') && (e.key === 'Enter' || e.key === ' ')){
+        startScreen.click();
+      }
+    });
+
+    // small safety: if user navigates back/forward, ensure UI visible
+    window.addEventListener('pageshow', ()=>{
+      if (!startScreen.classList.contains('hidden')) {
+        // nothing
+      } else {
+        // already started — ensure controls visible
+        musicControl.style.display = 'block';
+      }
     });
   </script>
 </body>
