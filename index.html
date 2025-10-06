@@ -1,88 +1,182 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gửi Hoàng Nhật - Đêm Đom Đóm</title>
-    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
-    <style>
-        * {margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent;}
-        body {
-            font-family: 'Ma Shan Zheng', cursive;
-            background: linear-gradient(to bottom, #000000, #0a0a2a, #000000);
-            color: #fff; overflow: hidden; height: 100vh; width: 100vw; position: fixed; touch-action: manipulation;
-        }
-        .firefly {position: absolute; width: 3px; height: 3px; background: #e6ff00; border-radius: 50%; filter: blur(1px);
-            box-shadow: 0 0 8px #e6ff00, 0 0 15px #e6ff00; z-index: 1;}
-        .lantern {position: absolute; bottom: -150px; z-index: 10; cursor: pointer; user-select: none;}
-        .lantern-body {width: 100%; height: 75%; border-radius: 50% 50% 40% 40%; position: relative;}
-        .lantern-top, .lantern-bottom {width: 115%; height: 12%; background: linear-gradient(45deg, #ffd700, #ffed4e);
-            position: absolute; left: -7.5%; box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);}
-        .lantern-top {top: 0; border-radius: 6px 6px 2px 2px;}
-        .lantern-bottom {bottom: 0; border-radius: 2px 2px 6px 6px;}
-        .lantern-handle {width: 4px; height: 30px; background: linear-gradient(#ffd700, #ffed4e);
-            position: absolute; top: -30px; left: 50%; transform: translateX(-50%); border-radius: 2px;}
-        .lantern-light {width: 70%; height: 60%; background: radial-gradient(circle, rgba(255,255,200,0.9) 0%, transparent 70%);
-            position: absolute; top: 20%; left: 15%; border-radius: 50%; animation: gentle-flicker 3s infinite alternate; filter: blur(2px);}
-        @keyframes gentle-flicker {0%,100%{opacity:0.6;transform:scale(0.95);}50%{opacity:1;transform:scale(1.05);}}
-        .message-line {position: absolute; font-size: clamp(1rem,4vw,1.8rem); color: transparent; text-align: center;
-            width: 90%; left: 5%; z-index: 15; text-shadow: none; transition: all 2s ease-in-out; opacity: 0; line-height: 1.4;}
-        .message-line.revealed {color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.8), 0 0 15px rgba(255,100,100,0.6); opacity: 1;}
-        .music-control {position: fixed; bottom: 15px; right: 15px; background: rgba(255,215,0,0.3); color: #ffd700;
-            border: 2px solid rgba(255,215,0,0.6); padding: 10px 16px; border-radius: 20px; cursor: pointer; z-index: 100;
-            font-family: 'Ma Shan Zheng', cursive; font-size: 0.9rem; backdrop-filter: blur(10px); transition: all 0.3s ease;}
-        .music-control:hover {background: rgba(255,215,0,0.4);}
-        .mountains {position: absolute; bottom: 0; width: 100%; height: 80px; z-index: 5;}
-        .mountain {position: absolute; bottom: 0; background: linear-gradient(transparent, #000); clip-path: polygon(0% 100%,50% 0%,100% 100%);}
-        .mountain:nth-child(1){left:0;width:150px;height:100px;background:linear-gradient(transparent,#0a0a0a);}
-        .mountain:nth-child(2){left:100px;width:180px;height:120px;background:linear-gradient(transparent,#000);}
-        .mountain:nth-child(3){right:60px;width:160px;height:110px;background:linear-gradient(transparent,#0a0a0a);}
-        .mountain:nth-child(4){right:0;width:140px;height:90px;background:linear-gradient(transparent,#000);}
-        .stars {position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;}
-        .star {position:absolute;background-color:white;border-radius:50%;animation:twinkle 8s infinite;}
-        @keyframes twinkle {0%,100%{opacity:0.1;}50%{opacity:0.8;}}
-        .touch-hint {position: fixed; bottom: 70px; left: 0; width: 100%; text-align: center;
-            color: rgba(255,215,0,0.7); font-size: 0.8rem; z-index: 50; animation: pulse 2s infinite;}
-        @keyframes pulse {0%,100%{opacity:0.5;}50%{opacity:1;}}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gửi Hoàng Nhật - Đêm Đom Đóm</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    body {
+      font-family: 'Ma Shan Zheng', cursive;
+      background: linear-gradient(to bottom, #000000, #0a0a2a, #000000);
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      touch-action: manipulation;
+    }
+    .hidden {display:none;}
+    .firefly {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: #e6ff00;
+      border-radius: 50%;
+      filter: blur(1px);
+      box-shadow: 0 0 8px #e6ff00, 0 0 15px #e6ff00;
+      z-index: 1;
+    }
+    .message-line {
+      position: absolute;
+      font-size: clamp(1rem,4vw,1.8rem);
+      color: transparent;
+      text-align: center;
+      width: 90%;
+      left: 5%;
+      z-index: 15;
+      text-shadow: none;
+      transition: all 2s ease-in-out;
+      opacity: 0;
+      line-height: 1.4;
+    }
+    .message-line.revealed {
+      color: #ffd700;
+      text-shadow: 0 0 8px rgba(255,215,0,0.8), 0 0 15px rgba(255,100,100,0.6);
+      opacity: 1;
+    }
+    .music-control {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: rgba(255,215,0,0.3);
+      color: #ffd700;
+      border: 2px solid rgba(255,215,0,0.6);
+      padding: 10px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      z-index: 100;
+      font-family: 'Ma Shan Zheng', cursive;
+      font-size: 0.9rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      display:none;
+    }
+    .music-control:hover {background: rgba(255,215,0,0.4);}
+    .start-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 300;
+      flex-direction: column;
+      text-align: center;
+    }
+    .start-text {
+      color: #ffd700;
+      font-size: 1.6rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100%{opacity:0.7;transform:scale(1);}
+      50%{opacity:1;transform:scale(1.05);}
+    }
+    .stars {position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;}
+    .star {position:absolute;background-color:white;border-radius:50%;animation:twinkle 8s infinite;}
+    @keyframes twinkle {0%,100%{opacity:0.1;}50%{opacity:0.8;}}
+  </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    <div class="mountains"><div class="mountain"></div><div class="mountain"></div><div class="mountain"></div><div class="mountain"></div></div>
-    <div class="message-line" id="line1" style="top: 5%;">Tết Trung Thu năm nay anh với vợ phải tạm thời xa nhau rồi...</div>
-    <div class="message-line" id="line2" style="top: 15%;">Vợ có nhớ anh không? Có còn yêu anh không ạ?</div>
-    <div class="message-line" id="line3" style="top: 25%;">Vợ là chấp niệm lớn nhất của cả cuộc đời anh rồi.</div>
-    <div class="message-line" id="line4" style="top: 35%;">Rồi anh với vợ sẽ sớm ở bên nhau thôi.</div>
-    <div class="message-line" id="line5" style="top: 45%;">Anh với vợ cùng một phường á...</div>
-    <div class="message-line" id="line6" style="top: 55%;">Anh không để vợ trốn khỏi cuộc đời anh đâu.</div>
-    <div class="message-line" id="line7" style="top: 65%;">Cho dù vợ không về nhà, anh cũng phải qua đó tìm vợ.</div>
-    <div class="message-line" id="line8" style="top: 75%;">Yêu vợ Hoàng Nhật của anh!</div>
-    <div class="message-line" id="line9" style="top: 85%;">Vợ là người đầu tiên cho anh cảm nhận được thế nào là tình yêu.</div>
-    <div class="touch-hint">Chạm vào đèn lồng để xem hiệu ứng đặc biệt</div>
-    <button class="music-control" id="musicControl"><span>🎵</span> Tắt nhạc</button>
-    <audio id="bgMusic" loop autoplay preload="auto">
-        <source src="tikgo.me-8076309.mp3" type="audio/mpeg">
-    </audio>
-    <script>
-        function createStars(){const stars=document.getElementById('stars');const n=window.innerWidth<768?60:100;
-            for(let i=0;i<n;i++){const s=document.createElement('div');s.className='star';
-            s.style.width=s.style.height=`${Math.random()*1.5}px`;s.style.left=`${Math.random()*100}%`;
-            s.style.top=`${Math.random()*100}%`;s.style.animationDelay=`${Math.random()*8}s`;stars.appendChild(s);}}
-        function createFireflies(){const n=window.innerWidth<768?30:50;for(let i=0;i<n;i++){const f=document.createElement('div');
-            f.className='firefly';f.style.left=`${Math.random()*100}%`;f.style.top=`${Math.random()*100}%`;
-            document.body.appendChild(f);}}
-        const lines=['line1','line2','line3','line4','line5','line6','line7','line8','line9'];
-        function createLantern(lineId,delay){setTimeout(()=>{const l=document.getElementById(lineId);
-            l.classList.add('revealed');},delay);}
-        function startPerformance(){createStars();createFireflies();
-            lines.forEach((id,i)=>{createLantern(id,i*3000);});}
-        const bgMusic=document.getElementById('bgMusic');const musicControl=document.getElementById('musicControl');let musicPlaying=true;
-        window.addEventListener('load',()=>{startPerformance();
-            bgMusic.volume=0.7;bgMusic.play().catch(()=>{console.log('Autoplay bị chặn, cần chạm tay.');});
-        });
-        musicControl.addEventListener('click',()=>{if(musicPlaying){bgMusic.pause();musicControl.innerHTML='<span>🔇</span> Bật nhạc';}
-            else{bgMusic.play();musicControl.innerHTML='<span>🎵</span> Tắt nhạc';}musicPlaying=!musicPlaying;});
-        document.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
-    </script>
+  <!-- Màn hình chờ -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-text">💛 Bấm để phát nhạc và bắt đầu 💛</div>
+  </div>
+
+  <div class="stars" id="stars"></div>
+
+  <div class="message-line" id="line1" style="top: 5%;">Tết Trung Thu năm nay anh với vợ phải tạm thời xa nhau rồi...</div>
+  <div class="message-line" id="line2" style="top: 15%;">Vợ có nhớ anh không? Có còn yêu anh không ạ?</div>
+  <div class="message-line" id="line3" style="top: 25%;">Vợ là chấp niệm lớn nhất của cả cuộc đời anh rồi.</div>
+  <div class="message-line" id="line4" style="top: 35%;">Rồi anh với vợ sẽ sớm ở bên nhau thôi.</div>
+  <div class="message-line" id="line5" style="top: 45%;">Anh với vợ cùng một phường á...</div>
+  <div class="message-line" id="line6" style="top: 55%;">Anh không để vợ trốn khỏi cuộc đời anh đâu.</div>
+  <div class="message-line" id="line7" style="top: 65%;">Cho dù vợ không về nhà, anh cũng phải qua đó tìm vợ.</div>
+  <div class="message-line" id="line8" style="top: 75%;">Yêu vợ Hoàng Nhật của anh!</div>
+  <div class="message-line" id="line9" style="top: 85%;">Vợ là người đầu tiên cho anh cảm nhận được thế nào là tình yêu.</div>
+
+  <button class="music-control" id="musicControl"><span>🎵</span> Tắt nhạc</button>
+
+  <audio id="bgMusic" preload="auto" loop>
+    <source src="tikgo.me-8076309.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const lines = ['line1','line2','line3','line4','line5','line6','line7','line8','line9'];
+    const startScreen=document.getElementById('startScreen');
+    const bgMusic=document.getElementById('bgMusic');
+    const musicControl=document.getElementById('musicControl');
+    let musicPlaying=false;
+
+    function createStars(){
+      const stars=document.getElementById('stars');
+      const n=window.innerWidth<768?60:100;
+      for(let i=0;i<n;i++){
+        const s=document.createElement('div');
+        s.className='star';
+        s.style.width=s.style.height=`${Math.random()*1.5}px`;
+        s.style.left=`${Math.random()*100}%`;
+        s.style.top=`${Math.random()*100}%`;
+        s.style.animationDelay=`${Math.random()*8}s`;
+        stars.appendChild(s);
+      }
+    }
+
+    function createFireflies(){
+      const n=window.innerWidth<768?30:50;
+      for(let i=0;i<n;i++){
+        const f=document.createElement('div');
+        f.className='firefly';
+        f.style.left=`${Math.random()*100}%`;
+        f.style.top=`${Math.random()*100}%`;
+        document.body.appendChild(f);
+      }
+    }
+
+    function startShow(){
+      createStars();
+      createFireflies();
+      lines.forEach((id,i)=>{
+        setTimeout(()=>{
+          document.getElementById(id).classList.add('revealed');
+        }, i*3000);
+      });
+    }
+
+    startScreen.addEventListener('click',()=>{
+      bgMusic.volume=0.7;
+      bgMusic.play();
+      startScreen.classList.add('hidden');
+      startShow();
+      musicControl.style.display='block';
+      musicPlaying=true;
+    });
+
+    musicControl.addEventListener('click',()=>{
+      if(musicPlaying){
+        bgMusic.pause();
+        musicControl.innerHTML='<span>🔇</span> Bật nhạc';
+      } else {
+        bgMusic.play();
+        musicControl.innerHTML='<span>🎵</span> Tắt nhạc';
+      }
+      musicPlaying=!musicPlaying;
+    });
+  </script>
 </body>
 </html>
