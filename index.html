@@ -1,92 +1,171 @@
-<style>
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
-  body{
-    font-family:'Ma Shan Zheng',cursive;
-    background:linear-gradient(to bottom,#000000,#0a0a2a,#000000);
-    color:#fff;
-    overflow:hidden;
-    touch-action:manipulation;
-    -webkit-user-select:none;
-    user-select:none;
-    position:relative;
-  }
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trung Thu Love</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{height:100%}
+    body{
+      font-family:'Ma Shan Zheng',cursive;
+      background:linear-gradient(to bottom,#000000,#0a0a2a,#000000);
+      color:#fff;
+      overflow:hidden;
+      touch-action:manipulation;
+      -webkit-user-select:none;
+      user-select:none;
+      position:relative;
+    }
 
-  .start-screen{
-    position:fixed;inset:0;
-    display:flex;align-items:center;justify-content:center;
-    z-index:1000;background:#000;
-    text-align:center;padding:20px;
-  }
-  .start-text{
-    color:#ffd700;
-    font-size:clamp(1.4rem,5vw,2.1rem);
-    padding:20px 32px;border-radius:30px;
-    background:linear-gradient(45deg,rgba(255,215,0,0.08),rgba(255,215,0,0.03));
-    box-shadow:0 0 25px rgba(255,215,0,0.15);
-    animation:pulse 2s infinite;
-  }
-  @keyframes pulse{0%,100%{transform:scale(1);opacity:0.85}50%{transform:scale(1.06);opacity:1}}
+    .start-screen{
+      position:fixed;inset:0;
+      display:flex;align-items:center;justify-content:center;
+      z-index:1000;background:#000;
+      text-align:center;padding:20px;
+    }
+    .start-text{
+      color:#ffd700;
+      font-size:clamp(1.6rem,5vw,2.4rem);
+      padding:20px 32px;border-radius:30px;
+      background:linear-gradient(45deg,rgba(255,215,0,0.1),rgba(255,215,0,0.03));
+      box-shadow:0 0 25px rgba(255,215,0,0.15);
+      animation:pulse 2s infinite;
+      text-shadow:0 0 8px rgba(255,255,180,0.9),0 0 20px rgba(255,215,0,0.8);
+    }
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:0.85}50%{transform:scale(1.06);opacity:1}}
 
-  .hidden{display:none !important}
+    .hidden{display:none !important}
 
-  .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
-  .star{position:absolute;border-radius:50%;background:#fff;opacity:0.9;animation:twinkle 8s infinite}
-  @keyframes twinkle{0%,100%{opacity:0.15}50%{opacity:0.9}}
+    .stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+    .star{position:absolute;border-radius:50%;background:#fff;opacity:0.9;animation:twinkle 8s infinite}
+    @keyframes twinkle{0%,100%{opacity:0.15}50%{opacity:0.9}}
 
-  .firefly{
-    position:fixed;width:4px;height:4px;border-radius:50%;
-    background:#e6ff00;filter:blur(1px);box-shadow:0 0 10px #e6ff00,0 0 18px #e6ff00;
-    z-index:6;pointer-events:none;opacity:0.95;
-  }
+    .firefly{
+      position:fixed;width:4px;height:4px;border-radius:50%;
+      background:#e6ff00;filter:blur(1px);box-shadow:0 0 10px #e6ff00,0 0 18px #e6ff00;
+      z-index:6;pointer-events:none;opacity:0.95;
+    }
 
-  .lantern{
-    position:fixed;width:32px;height:45px;border-radius:45% 45% 35% 35%;
-    background:linear-gradient(45deg,#ff8a00,#ff3b3b);
-    box-shadow:0 0 16px rgba(255,120,0,0.7), inset 0 0 8px rgba(255,220,100,0.3);
-    z-index:5;pointer-events:none;opacity:0.95;
-    transform-origin:center;
-  }
-  @keyframes lanternFloat{0%{transform:translateY(100vh) rotate(0deg)}100%{transform:translateY(-20vh) rotate(15deg)}}
+    .lantern{
+      position:fixed;width:32px;height:45px;border-radius:45% 45% 35% 35%;
+      background:linear-gradient(45deg,#ff8a00,#ff3b3b);
+      box-shadow:0 0 16px rgba(255,120,0,0.7), inset 0 0 8px rgba(255,220,100,0.3);
+      z-index:5;pointer-events:none;opacity:0.95;
+      transform-origin:center;
+    }
+    @keyframes lanternFloat{0%{transform:translateY(100vh) rotate(0deg)}100%{transform:translateY(-20vh) rotate(15deg)}}
 
-  /* 👇 cải thiện chữ chính */
-  .message-line{
-    position:fixed;
-    width:90%;
-    left:5%;
-    text-align:center;
-    color:transparent;
-    font-size:clamp(1.25rem,5vw,2.1rem);
-    line-height:1.6;
-    z-index:8;
-    transition:opacity 1s ease, color 1s ease, text-shadow 1s ease;
-    opacity:0;
-  }
-  .message-line.revealed{
-    color:#ffea80;
-    text-shadow:
-      0 0 8px rgba(255,255,180,0.9),
-      0 0 18px rgba(255,215,0,0.8),
-      0 0 35px rgba(255,160,0,0.6);
-    opacity:1;
-  }
+    .message-line{
+      position:fixed;
+      width:90%;
+      left:5%;
+      text-align:center;
+      color:transparent;
+      font-size:clamp(1.4rem,5vw,2.3rem);
+      line-height:1.6;
+      z-index:8;
+      transition:opacity 1s ease, color 1s ease, text-shadow 1s ease;
+      opacity:0;
+    }
+    .message-line.revealed{
+      color:#ffea80;
+      text-shadow:
+        0 0 8px rgba(255,255,180,0.9),
+        0 0 18px rgba(255,215,0,0.8),
+        0 0 35px rgba(255,160,0,0.6);
+      opacity:1;
+    }
 
-  .music-control{
-    position:fixed;right:14px;bottom:14px;z-index:120;
-    background:rgba(255,215,0,0.25);
-    color:#ffd700;border:2px solid rgba(255,215,0,0.55);
-    padding:10px 15px;border-radius:20px;
-    font-family:'Ma Shan Zheng';font-size:1rem;
-    cursor:pointer;backdrop-filter:blur(8px);
-    transition:background .3s ease;
-  }
-  .music-control:hover{background:rgba(255,215,0,0.35)}
+    .music-control{
+      position:fixed;right:14px;bottom:14px;z-index:120;
+      background:rgba(255,215,0,0.25);
+      color:#ffd700;border:2px solid rgba(255,215,0,0.55);
+      padding:10px 15px;border-radius:20px;
+      font-family:'Ma Shan Zheng';font-size:1rem;
+      cursor:pointer;backdrop-filter:blur(8px);
+      transition:background .3s ease;
+    }
+    .music-control:hover{background:rgba(255,215,0,0.35)}
+  </style>
+</head>
+<body>
+  <div class="start-screen" id="startScreen">
+    <div class="start-text">💛 Bấm để phát nhạc và bắt đầu 💛</div>
+  </div>
 
-  .hint{
-    position:fixed;left:50%;bottom:80px;transform:translateX(-50%);
-    z-index:121;
-    background:rgba(0,0,0,0.65);
-    color:#ffd700;padding:10px 16px;
-    border-radius:14px;font-size:1rem;display:none;
-  }
-</style>
+  <audio id="bgMusic" src="tik.mp3" preload="auto"></audio>
+  <div class="stars" id="stars"></div>
+
+  <div class="message-line" id="line1" style="top:30%;">Trung Thu này mình cùng nhau thắp đèn nhé 💫</div>
+  <div class="message-line" id="line2" style="top:40%;">Dù xa hay gần, lòng vẫn ấm áp như trăng rằm 🌕</div>
+  <div class="message-line" id="line3" style="top:50%;">Chúc em luôn vui vẻ, bình an và được yêu thương 💛</div>
+  <div class="message-line" id="line4" style="top:60%;">Trung Thu hạnh phúc nha, tình yêu của anh 🎐</div>
+
+  <button class="music-control" id="musicBtn">Tắt nhạc</button>
+
+  <script>
+    const music = document.getElementById('bgMusic');
+    const startScreen = document.getElementById('startScreen');
+    const musicBtn = document.getElementById('musicBtn');
+    const stars = document.getElementById('stars');
+
+    // 1️⃣ Hiệu ứng sao
+    for(let i=0;i<120;i++){
+      const s=document.createElement('div');
+      s.className='star';
+      const size=Math.random()*2+1;
+      s.style.width=s.style.height=size+'px';
+      s.style.top=Math.random()*100+'%';
+      s.style.left=Math.random()*100+'%';
+      s.style.animationDuration=(Math.random()*8+4)+'s';
+      stars.appendChild(s);
+    }
+
+    // 2️⃣ Hiệu ứng đèn lồng
+    function createLantern(){
+      const l=document.createElement('div');
+      l.className='lantern';
+      l.style.left=Math.random()*100+'vw';
+      l.style.animation=`lanternFloat ${8+Math.random()*8}s linear infinite`;
+      l.style.animationDelay=Math.random()*5+'s';
+      document.body.appendChild(l);
+      setTimeout(()=>l.remove(),16000);
+    }
+    setInterval(createLantern,1200);
+
+    // 3️⃣ Hiệu ứng đom đóm
+    function createFirefly(){
+      const f=document.createElement('div');
+      f.className='firefly';
+      f.style.left=Math.random()*100+'vw';
+      f.style.top=Math.random()*100+'vh';
+      document.body.appendChild(f);
+      setTimeout(()=>f.remove(),6000);
+    }
+    setInterval(createFirefly,700);
+
+    // 4️⃣ Bắt đầu sau khi bấm
+    startScreen.addEventListener('click',()=>{
+      startScreen.classList.add('hidden');
+      music.play().catch(()=>{});
+      showMessages();
+    });
+
+    // 5️⃣ Nút điều khiển nhạc
+    musicBtn.addEventListener('click',()=>{
+      if(music.paused){music.play();musicBtn.textContent='Tắt nhạc'}
+      else{music.pause();musicBtn.textContent='Phát nhạc'}
+    });
+
+    // 6️⃣ Lần lượt hiện dòng chữ
+    function showMessages(){
+      const lines=['line1','line2','line3','line4'];
+      lines.forEach((id,i)=>{
+        setTimeout(()=>document.getElementById(id).classList.add('revealed'),i*4000);
+      });
+    }
+  </script>
+</body>
+</html>
